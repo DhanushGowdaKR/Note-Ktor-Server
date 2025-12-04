@@ -6,7 +6,16 @@ import com.dhanush.model.toNote
 import com.dhanush.utils.MongoConfig
 import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.Filters
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import org.bson.types.ObjectId
+import kotlin.collections.map
 
 class NoteRepositoryImpl(
     private val database: MongoDatabase
@@ -25,8 +34,16 @@ class NoteRepositoryImpl(
         notesCollection.findOneAndDelete(Filters.eq("id", id))
     }
 
-    override suspend fun getAllNotes(): List<Note> {
-        return notesCollection.find().map { it.toNote() }.toList()
+    override fun getAllNotes(): Flow<List<Note>> = callbackFlow {
+        trySend(notesCollection.find().map { it.toNote() }.toList())
+        val changeStream = notesCollection.watch()
+        val job = launch {
+            changeStream.asFlow().collect { _ ->
+                val notes = notesCollection.find().map { it.toNote() }.toList()
+                trySend(notes)
+            }
+        }
+        awaitClose { job.cancel() }
     }
 
     override suspend fun getNoteById(id: String): Note? {
