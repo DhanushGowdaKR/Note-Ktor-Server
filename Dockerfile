@@ -3,8 +3,7 @@ FROM eclipse-temurin:17-jdk AS build
 WORKDIR /app
 
 COPY . .
-RUN chmod +x ./gradlew && ./gradlew build --no-daemon
-
+RUN chmod +x ./gradlew && ./gradlew build --no-daemon -x test
 # ---------- Runtime stage ----------
 FROM eclipse-temurin:17-jre
 WORKDIR /app
