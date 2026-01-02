@@ -7,6 +7,7 @@ plugins {
     kotlin("jvm") version "2.2.21"
     id("io.ktor.plugin") version "3.3.2"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.2.21"
+//    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "com.dhanush"
@@ -15,7 +16,12 @@ version = "0.0.1"
 application {
     mainClass = "io.ktor.server.netty.EngineMain"
 }
-
+//tasks.shadowJar {
+//    archiveFileName.set("app.jar")
+//}
+//tasks.build {
+//    dependsOn(tasks.shadowJar)
+//}
 dependencies {
     implementation("io.ktor:ktor-server-core")
     implementation("io.ktor:ktor-server-content-negotiation")
