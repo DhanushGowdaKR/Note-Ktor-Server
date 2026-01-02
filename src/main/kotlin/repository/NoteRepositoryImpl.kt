@@ -46,6 +46,10 @@ class NoteRepositoryImpl(
         awaitClose { job.cancel() }
     }
 
+//    override suspend fun getAllNotes(): List<Note> {
+//        return notesCollection.find().map { it.toNote() } .toList()
+//    }
+
     override suspend fun getNoteById(id: String): Note? {
         return notesCollection.find(Filters.eq("id", id)).firstOrNull()?.toNote()
     }
