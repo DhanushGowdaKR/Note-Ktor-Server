@@ -1,0 +1,8 @@
+ktor:
+
+  application:
+    modules:
+      - com.dhanush.ApplicationKt.module
+  deployment:
+    port: $PORT
+    host: 0.0.0.0
