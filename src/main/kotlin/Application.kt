@@ -6,18 +6,13 @@ import com.dhanush.route.noteRoute
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
-import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.sse.SSE
 import kotlinx.serialization.json.Json
 import org.koin.ktor.ext.inject
 
 fun main(args: Array<String>) {
-    embeddedServer(
-        Netty,
-        port = System.getenv("PORT")?.toInt() ?: 8080
-    ) { module() }
+    io.ktor.server.netty.EngineMain.main(args)
 }
 
 fun Application.module() {
